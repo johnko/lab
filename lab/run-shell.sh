@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 set +x
-if [ "x" = "x$LABCLUSTER_IP" ]; then
+if [[ -z $LABCLUSTER_IP ]]; then
   echo "ERROR: Missing export LABCLUSTER_IP=..."
   exit 1
 fi
@@ -19,5 +19,5 @@ docker build \
 docker run -it --rm \
   --platform linux/amd64 \
   -v ./tmp/kubeconfig.yaml:/root/.kube/config \
-  --add-host labcluster:$LABCLUSTER_IP \
+  --add-host "labcluster:$LABCLUSTER_IP" \
   $IMAGE_NAME
