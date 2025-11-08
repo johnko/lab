@@ -1,40 +1,43 @@
-- hosts: all
-  become: true
+- become: true
   become_user: root
+  hosts: all
   tasks:
-    - name: Copy bin scripts
-      copy:
-        src: './bin/{{ item }}'
-        dest: '/usr/local/bin/{{ item }}'
+    - copy:
+        dest: /usr/local/bin/{{ item }}
         force: true
-        mode: '755'
+        mode: "755"
+        src: ./bin/{{ item }}
       loop:
         - cert_generateselfsigned
         - cert_info
-    - name: Copy network scripts
-      copy:
-        src: './network/{{ item.file }}'
+      name: Copy bin scripts
+    - copy:
         dest: '{{ item.dest }}/{{ item.file }}'
         force: true
         mode: '{{ item.mode }}'
+        src: ./network/{{ item.file }}
       loop:
-        - { file: get-ip, dest: '/usr/local/bin', mode: '755' }
-        - { file: update-issue, dest: '/usr/local/sbin', mode: '755' }
-
-
-
-- hosts: sticks
-  become: true
+        - dest: /usr/local/bin
+          file: get-ip
+          mode: "755"
+        - dest: /usr/local/sbin
+          file: update-issue
+          mode: "755"
+      name: Copy network scripts
+- become: true
   become_user: root
+  hosts: sticks
   tasks:
-    - name: Copy healthcheck scripts
-      copy:
-        src: './healthcheck/{{ item.file }}'
+    - copy:
         dest: '{{ item.dest }}/{{ item.file }}'
         force: true
         mode: '{{ item.mode }}'
+        src: ./healthcheck/{{ item.file }}
       loop:
-        - { file: healthcheck-diff.sh, dest: '/usr/local/sbin', mode: '755' }
+        - dest: /usr/local/sbin
+          file: healthcheck-diff.sh
+          mode: "755"
+      name: Copy healthcheck scripts
     # - name: Template healthcheck scripts
     #   template:
     #     src: './healthcheck/{{ item.file }}.j2'
@@ -43,45 +46,41 @@
     #     mode: '{{ item.mode }}'
     #   loop:
     #     - { file: healthcheck_cron, dest: '/etc/cron.d', mode: '644' } # required no dot in cron.d filenames
-    - name: Delete unused scripts
-      file:
-        path: '{{ item }}'
+    - file:
         force: true
+        path: '{{ item }}'
         state: absent
       loop:
         - /etc/cron.d/healthcheck_cron
+      name: Delete unused scripts
     - name: Force cron.d to reload
       shell: touch /etc/cron.d
-
-    - name: Extend the logical volume to consume all remaining space in the volume group
-      community.general.lvol:
-        vg: ubuntu-vg
+    - community.general.lvol:
         lv: ubuntu-lv
-        size: +100%FREE
         resizefs: true
+        # - name: Create a userdata volume
+        #   community.general.lvol:
+        #     vg: ubuntu-vg
+        #     lv: userdata
+        #     size: 12g
+        # - name: Create a ext4 filesystem
+        #   community.general.filesystem:
+        #     dev: /dev/mapper/ubuntu--vg-userdata
+        #     fstype: ext4
+        # - name: Mount userdata volume
+        #   ansible.posix.mount:
+        #     src: /dev/mapper/ubuntu--vg-userdata
+        #     path: /userdata
+        #     fstype: ext4
+        #     passno: '2'
+        #     state: mounted
 
-    # - name: Create a userdata volume
-    #   community.general.lvol:
-    #     vg: ubuntu-vg
-    #     lv: userdata
-    #     size: 12g
-    # - name: Create a ext4 filesystem
-    #   community.general.filesystem:
-    #     dev: /dev/mapper/ubuntu--vg-userdata
-    #     fstype: ext4
-    # - name: Mount userdata volume
-    #   ansible.posix.mount:
-    #     src: /dev/mapper/ubuntu--vg-userdata
-    #     path: /userdata
-    #     fstype: ext4
-    #     passno: '2'
-    #     state: mounted
-
-
-
-- hosts: mac
-  become: true
+        size: +100%FREE
+        vg: ubuntu-vg
+      name: Extend the logical volume to consume all remaining space in the volume group
+- become: true
   become_user: root
+  hosts: mac
   tasks:
     # - name: Link docker.sock in mac
     #   file:
@@ -90,77 +89,72 @@
     #     force: true
     #     mode: '755'
     #     state: link
-    - name: Delete unused scripts
-      file:
-        path: '{{ item }}'
+    - file:
         force: true
+        path: '{{ item }}'
         state: absent
       loop:
         - /var/run/docker.sock
-
-
-
-- hosts: ubuntu
-  become: true
+      name: Delete unused scripts
+- become: true
   become_user: root
+  hosts: ubuntu
   tasks:
     - name: Remove default ubuntu user
       user:
-        user: ubuntu
-        state: absent
-        remove: true
         force: true
-    - name: Allow ansible_user to sudo NOPASSWD
-      lineinfile:
-        path: /etc/sudoers.d/90-cloud-init-users
-        state: present
+        remove: true
+        state: absent
+        user: ubuntu
+    - lineinfile:
         create: true
-        regexp: '^{{ ansible_user }}'
         line: '{{ ansible_user }} ALL=(ALL) NOPASSWD:ALL'
+        path: /etc/sudoers.d/90-cloud-init-users
+        regexp: ^{{ ansible_user }}
+        state: present
         validate: /usr/sbin/visudo -cf %s
+      name: Allow ansible_user to sudo NOPASSWD
     - name: Reset lab password
-      shell: '(echo lab;echo lab;)| passwd lab'
-
-    - name: Update apt repo and cache
-      apt:
+      shell: (echo lab;echo lab;)| passwd lab
+    - apt:
+        cache_valid_time: 3600
         force_apt_get: true
         update_cache: true
-        cache_valid_time: 3600
-
-    - name: Copy luks scripts
-      copy:
-        src: './luks-autounlock/{{ item.file }}'
+      name: Update apt repo and cache
+    - copy:
         dest: '{{ item.dest }}/{{ item.file }}'
         force: true
         mode: '{{ item.mode }}'
+        src: ./luks-autounlock/{{ item.file }}
       loop:
-        - { file: setup-luks-autounlock.sh, dest: '/usr/local/sbin', mode: '755' }
-
-    - name: Setup trigger on networkd-dispatcher
-      file:
-        src: /usr/local/sbin/update-issue
-        dest: '/etc/networkd-dispatcher/{{ item }}.d/update-issue'
+        - dest: /usr/local/sbin
+          file: setup-luks-autounlock.sh
+          mode: "755"
+      name: Copy luks scripts
+    - file:
+        dest: /etc/networkd-dispatcher/{{ item }}.d/update-issue
         force: true
-        mode: '755'
+        mode: "755"
+        src: /usr/local/sbin/update-issue
         state: link
       loop:
-        - 'carrier'
-        - 'no-carrier'
-        - 'dormant'
+        - carrier
+        - no-carrier
+        - dormant
         - 'off'
-        - 'routable'
+        - routable
+      name: Setup trigger on networkd-dispatcher
     - name: Check /etc/issue version
-      shell: cat /etc/issue | grep -q "{{ ansible_facts['lsb']['description'] }}" && echo '0' || echo '1'
       register: ISSUE
+      shell: cat /etc/issue | grep -q "{{ ansible_facts['lsb']['description'] }}" && echo '0' || echo '1'
     - name: Refresh base-files if OS version mismatched
+      register: BASEFILES
       # found that /etc/issue is installed by base-files: dpkg -S /etc/issue
       shell: rm -v /etc/issue ; apt-get install --reinstall -y -o Dpkg::Options::="--force-confmiss" base-files
-      register: BASEFILES
       when: (ISSUE.stdout | int) > 0
     - debug:
         var: BASEFILES.stdout_lines
       when: (ISSUE.stdout | int) > 0
-
     # - name: Install packages
     #   apt:
     #     force_apt_get: true
@@ -168,93 +162,93 @@
     #   loop:
     #     - docker.io
     #     - docker-compose
-
-    - name: Remove unused packages
-      apt:
+    - apt:
         force_apt_get: true
         name: '{{ item }}'
-        state: absent
         purge: true
+        state: absent
       loop:
         - docker
         - wmdocker
         - docker.io
         - docker-compose
-    # - name: Delete unused scripts
-    #   file:
-    #     path: '{{ item }}'
-    #     force: true
-    #     state: absent
-    #   loop:
-    #     - /bin/cert_generateselfsigned
-    #     - /bin/cert_info
-    #     - /bin/get-ip
-    #     - /sbin/update-issue
-    #     - /sbin/healthcheck-diff.sh
-
-    - name: Upgrade all packages
-      # https://www.cyberciti.biz/faq/ansible-apt-update-all-packages-on-ubuntu-debian-linux/
+      name: Remove unused packages
+    - # https://www.cyberciti.biz/faq/ansible-apt-update-all-packages-on-ubuntu-debian-linux/
       apt:
         force_apt_get: true
         upgrade: dist
-    - name: Cleanup apt
-      apt:
-        force_apt_get: true
+      name: Upgrade all packages
+      # - name: Delete unused scripts
+      #   file:
+      #     path: '{{ item }}'
+      #     force: true
+      #     state: absent
+      #   loop:
+      #     - /bin/cert_generateselfsigned
+      #     - /bin/cert_info
+      #     - /bin/get-ip
+      #     - /sbin/update-issue
+      #     - /sbin/healthcheck-diff.sh
+    - apt:
         clean: true
-
+        force_apt_get: true
+      name: Cleanup apt
     - name: Check if a reboot is needed
       register: reboot_required_file
       stat:
-        path: /var/run/reboot-required
         get_md5: false
+        path: /var/run/reboot-required
     - name: Reboot if kernel updated
       reboot:
-        msg: 'Reboot initiated by Ansible for kernel updates'
         connect_timeout: 5
-        reboot_timeout: 300
-        pre_reboot_delay: 0
+        msg: Reboot initiated by Ansible for kernel updates
         post_reboot_delay: 30
+        pre_reboot_delay: 0
+        reboot_timeout: 300
         test_command: uptime
       when: reboot_required_file.stat.exists
-
-
-
-- hosts: ucarpservers
-  become: true
+- become: true
   become_user: root
+  hosts: ucarpservers
   tasks:
-    - name: Install packages
-      apt:
+    - apt:
         force_apt_get: true
         name: '{{ item }}'
       loop:
         - ucarp
-    - name: Create ucarp directory if it does not exist
-      file:
+      name: Install packages
+    - file:
+        force: true
+        mode: "755"
         path: /etc/ucarp
         state: directory
-        force: true
-        mode: '755'
-    - name: Copy ucarp scripts
-      copy:
-        src: './ucarp/{{ item.file }}'
+      name: Create ucarp directory if it does not exist
+    - copy:
         dest: '{{ item.dest }}/{{ item.file }}'
         force: true
         mode: '{{ item.mode }}'
+        src: ./ucarp/{{ item.file }}
       loop:
-        - { file: ucarp@.service, dest: '/usr/lib/systemd/system', mode: '644' }
-        - { file: vip-common.conf, dest: '/etc/ucarp', mode: '644' }
-    - name: Template ucarp scripts
+        - dest: /usr/lib/systemd/system
+          file: ucarp@.service
+          mode: "644"
+        - dest: /etc/ucarp
+          file: vip-common.conf
+          mode: "644"
+      name: Copy ucarp scripts
+    - loop:
+        - dest: /etc/ucarp
+          file: vip-001.conf
+          mode: "644"
+      name: Template ucarp scripts
       template:
-        src: './ucarp/{{ item.file }}.j2'
         dest: '{{ item.dest }}/{{ item.file }}'
         force: true
         mode: '{{ item.mode }}'
-      loop:
-        - { file: vip-001.conf, dest: '/etc/ucarp', mode: '644' }
+        src: ./ucarp/{{ item.file }}.j2
     - name: Configure ucarp service
       systemd_service:
         daemon_reload: true
+        enabled: '{{ vars[''vars''][''ucarp_service_enabled''] }}'
         name: ucarp@001
-        state: "{% if vars['vars']['ucarp_service_enabled'] %}started{% else %}stopped{% endif %}"
-        enabled: "{{ vars['vars']['ucarp_service_enabled'] }}"
+        state: '{% if vars[''vars''][''ucarp_service_enabled''] %}started{% else %}stopped{% endif %}'

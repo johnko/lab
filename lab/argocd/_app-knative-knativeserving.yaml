@@ -6,7 +6,7 @@ metadata:
 spec:
   config:
     istio:
-      local-gateway.knative-serving.knative-local-gateway: "knative-local-gateway.istio-system.svc.cluster.local"
+      local-gateway.knative-serving.knative-local-gateway: knative-local-gateway.istio-system.svc.cluster.local
   # omitted below to be able to use istio
   #   network:
   #     ingress-class: kourier.ingress.networking.knative.dev

@@ -1,38 +1,34 @@
-- hosts: microk8sservers
-  become: true
+- become: true
   become_user: root
+  hosts: microk8sservers
   tasks:
-    - name: Generate /etc/hosts for microk8s
-      lineinfile:
-        path: /etc/hosts
-        state: present
+    - lineinfile:
         create: true
+        line: '{{ hostvars[item][''vars''][''advertise_ip''] }} {{ hostvars[item][''ansible_facts''][''hostname''] }} #microk8s'
+        path: /etc/hosts
         regexp: '.*{{ item }} #microk8s$'
-        line: "{{ hostvars[item]['vars']['advertise_ip'] }} {{ hostvars[item]['ansible_facts']['hostname'] }} #microk8s"
+        state: present
+      loop: '{{ groups[''microk8sservers''] | flatten(levels=1) }}'
+      name: Generate /etc/hosts for microk8s
       when: vars['vars']['advertise_ip'] is defined
-      loop: "{{ groups['microk8sservers'] | flatten(levels=1) }}"
-
-    - name: Install microk8s
-      community.general.snap:
+    - community.general.snap:
+        channel: 1.27
+        classic: true
         name:
           - microk8s
-        classic: true
-        channel: 1.27
-
-    - name: Template microk8s config
+      name: Install microk8s
+    - loop:
+        - file: microk8s-config.yaml
+          mode: "644"
+      name: Template microk8s config
       template:
-        src: './microk8s/{{ item.file }}.j2'
         dest: '{{ ansible_user_dir }}/{{ item.file }}'
         force: true
         mode: '{{ item.mode }}'
-      loop:
-        - { file: microk8s-config.yaml, mode: '644' }
-
-
-
-- hosts: microk8sprimary
-  become: true
+        src: ./microk8s/{{ item.file }}.j2
+- become: true
   become_user: root
+  hosts: microk8sprimary
   tasks:
     - name: Restart microk8s with new config
       shell: snap set microk8s config="$(cat {{ ansible_user_dir }}/microk8s-config.yaml)"
@@ -44,20 +40,16 @@
         - lookup('ansible.builtin.fileglob', './tmp/kubeconfig.yaml') == []
     - name: Wait
       shell: sleep 60 && microk8s status --wait-ready
-
     - name: Get instructions to add node
-      shell: "microk8s add-node | grep {{ vars['vars']['advertise_ip'] }} | head -n1"
       register: JOINCMD
+      shell: microk8s add-node | grep {{ vars['vars']['advertise_ip'] }} | head -n1
     - debug:
         msg: '{{ JOINCMD.stdout }}'
     - shell: exit 1
       when: (JOINCMD.stdout | length) < 1
-
-
-
-- hosts: microk8sservers
-  become: true
+- become: true
   become_user: root
+  hosts: microk8sservers
   tasks:
     - name: Restart microk8s with new config
       shell: snap set microk8s config="$(cat {{ ansible_user_dir }}/microk8s-config.yaml)"
@@ -76,33 +68,30 @@
       shell: sleep 60 && microk8s status --wait-ready
       when:
         - inventory_hostname not in groups['microk8sprimary']
-
-
-
-- hosts: microk8sprimary
-  become: true
+- become: true
   become_user: root
+  hosts: microk8sprimary
   tasks:
     - name: Extract kubeconfig
-      shell: "microk8s config > /var/tmp/kubeconfig.yaml"
+      shell: microk8s config > /var/tmp/kubeconfig.yaml
       when:
         - lookup('ansible.builtin.fileglob', './tmp/kubeconfig.yaml') == []
-    - name: Fetch kubeconfig
-      fetch:
-        src: /var/tmp/kubeconfig.yaml
+    - fetch:
         dest: ./tmp/kubeconfig.yaml
         flat: true
+        src: /var/tmp/kubeconfig.yaml
+      name: Fetch kubeconfig
       when:
         - lookup('ansible.builtin.fileglob', './tmp/kubeconfig.yaml') == []
+    - loop:
+        - name: dns
+      name: Enable microk8s addons
+      # - { name: community }
+      # - { name: metrics-server } # will be replaced when argocd starts
+      # - { name: cert-manager } # will be replaced when argocd starts
+      # - { name: traefik } # microk8s installs deplyoment, but we want daemonset, will be replaced when argocd starts
+      # - { name: istio } # will be replaced when argocd starts
+      # - { name: knative } # will be replaced when argocd starts
+      # - { name: openfaas } # will be replaced when argocd starts
 
-    - name: Enable microk8s addons
       shell: microk8s enable {{ item.name }}
-      loop:
-        - { name: dns }
-        # - { name: community }
-        # - { name: metrics-server } # will be replaced when argocd starts
-        # - { name: cert-manager } # will be replaced when argocd starts
-        # - { name: traefik } # microk8s installs deplyoment, but we want daemonset, will be replaced when argocd starts
-        # - { name: istio } # will be replaced when argocd starts
-        # - { name: knative } # will be replaced when argocd starts
-        # - { name: openfaas } # will be replaced when argocd starts
