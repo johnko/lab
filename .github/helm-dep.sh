@@ -20,7 +20,7 @@ if git diff --name-only | grep lab/renovatebotwrapper; then
   cd ./charts
 
   # clean chart sources since files could have been deleted upstream
-  for i in $(ls -1 *.tgz | xargs -t -I{} -P1 tar tf {} 2>/dev/null | cut -f1 -d/ | sort -u); do
+  for i in $(ls -1 ./*.tgz | xargs -t -I{} -P1 tar tf {} 2>/dev/null | cut -f1 -d/ | sort -u); do
     if [ -d ./"$i"/ ]; then
       rm -fr ./"$i"/
     fi
