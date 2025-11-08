@@ -12,21 +12,21 @@ if [ ! -e $KEYFILE ]; then
 fi
 if cryptsetup status $CRYPT_DEV | grep -q LUKS; then
   TARGET_DEV=$(cryptsetup status $CRYPT_DEV | grep 'device:' | awk '{print $2}')
-  cryptsetup -v luksAddKey $TARGET_DEV $KEYFILE
+  cryptsetup -v luksAddKey "$TARGET_DEV" $KEYFILE
 fi
 
 BOOT_DEV=$(mount | grep '/boot ' | cut -d' ' -f1)
-BOOT_DEV_SHORT=${BOOT_DEV##*/}
-BOOT_DEV_UUID=$(blkid $BOOT_DEV | tr ' ' "\n" | grep ^UUID | tr -d '"' | cut -d= -f2)
+# BOOT_DEV_SHORT=${BOOT_DEV##*/}
+BOOT_DEV_UUID=$(blkid "$BOOT_DEV" | tr ' ' "\n" | grep ^UUID | tr -d '"' | cut -d= -f2)
 if [ ! -e /etc/crypttab.bkp ]; then
   cp -a /etc/crypttab /etc/crypttab.bkp
 fi
 TARGET_DEV_UUID=$(cat /etc/crypttab.bkp | cut -d' ' -f2)
 
 cat >/etc/crypttab <<EOF
-$(cat /etc/crypttab.bkp | grep -v $CRYPT_DEV_SHORT)
+$(cat /etc/crypttab.bkp | grep -v "$CRYPT_DEV_SHORT")
 $CRYPT_DEV_SHORT $TARGET_DEV_UUID /dev/disk/by-uuid/$BOOT_DEV_UUID:/keyfile luks,keyscript=/lib/cryptsetup/scripts/passdev
 EOF
 
 KERNEL_RELEASE=$(uname --kernel-release)
-mkinitramfs -o /boot/initrd.img $KERNEL_RELEASE
+mkinitramfs -o /boot/initrd.img "$KERNEL_RELEASE"
