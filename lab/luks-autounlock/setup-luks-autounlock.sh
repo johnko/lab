@@ -21,10 +21,10 @@ BOOT_DEV_UUID=$(blkid "$BOOT_DEV" | tr ' ' "\n" | grep ^UUID | tr -d '"' | cut -
 if [ ! -e /etc/crypttab.bkp ]; then
   cp -a /etc/crypttab /etc/crypttab.bkp
 fi
-TARGET_DEV_UUID=$(cat /etc/crypttab.bkp | cut -d' ' -f2)
+TARGET_DEV_UUID=$(cut -d' ' -f2 </etc/crypttab.bkp)
 
 cat >/etc/crypttab <<EOF
-$(cat /etc/crypttab.bkp | grep -v "$CRYPT_DEV_SHORT")
+$(grep -v "$CRYPT_DEV_SHORT" /etc/crypttab.bkp)
 $CRYPT_DEV_SHORT $TARGET_DEV_UUID /dev/disk/by-uuid/$BOOT_DEV_UUID:/keyfile luks,keyscript=/lib/cryptsetup/scripts/passdev
 EOF
 
