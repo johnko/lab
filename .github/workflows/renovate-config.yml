@@ -22,11 +22,15 @@ jobs:
         with:
           show-progress: false
       - name: testing ${{ matrix.file }}
-        run: renovate-config-validator ${{ matrix.file }}.json
+        run: |
+          if [ -e ${{ matrix.file }}.json ]; then
+            renovate-config-validator ${{ matrix.file }}.json
+          fi
     strategy:
       matrix:
         file:
           - .github/renovate
+          - default
     timeout-minutes: 10
 name: renovate-config
 on:
@@ -34,5 +38,6 @@ on:
     paths:
       - .github/renovate.json
       - .github/workflows/renovate-config.yml
+      - default.json
 permissions:
   contents: read
