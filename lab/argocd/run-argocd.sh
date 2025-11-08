@@ -23,7 +23,7 @@ case $1 in
     echo Password: $(kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d)
     echo
     set -x
-    if ! curl -L -k https://argocd.labcluster.local/ ; then
+    if ! curl -L -k https://argocd.labcluster.local/; then
       kubectl port-forward service/argo-cd-argocd-server -n argocd 8080:443 &
       open http://localhost:8080
     else

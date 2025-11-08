@@ -10,7 +10,7 @@ if [ ! -e $KEYFILE ]; then
   dd if=/dev/urandom of=$KEYFILE bs=1024 count=4
   chmod 0400 $KEYFILE
 fi
-if cryptsetup status $CRYPT_DEV | grep -q LUKS ; then
+if cryptsetup status $CRYPT_DEV | grep -q LUKS; then
   TARGET_DEV=$(cryptsetup status $CRYPT_DEV | grep 'device:' | awk '{print $2}')
   cryptsetup -v luksAddKey $TARGET_DEV $KEYFILE
 fi
