@@ -1,15 +1,15 @@
 #!/bin/bash
 set -e
 set +x
-if [[ -z "$ANSIBLE_PASSWORD" ]]; then
+if [[ -z $ANSIBLE_PASSWORD ]]; then
   echo "ERROR: Missing export ANSIBLE_PASSWORD=..."
   exit 1
 fi
-if [[ "$ANSIBLE_PASSWORD_MAC" ]]; then
+if [[ -z $ANSIBLE_PASSWORD_MAC ]]; then
   echo "ERROR: Missing export ANSIBLE_PASSWORD_MAC=..."
   exit 1
 fi
-if [[ "$LABCLUSTER_IP" ]]; then
+if [[ -z $LABCLUSTER_IP ]]; then
   echo "ERROR: Missing export LABCLUSTER_IP=..."
   exit 1
 fi
