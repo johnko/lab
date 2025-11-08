@@ -1,7 +1,7 @@
 #!/bin/bash
 set -ex
 
-if git diff --name-only | grep lab/renovatebotwrapper ; then
+if git diff --name-only | grep lab/renovatebotwrapper; then
 
   cd ./lab/renovatebotwrapper
 
@@ -20,15 +20,15 @@ if git diff --name-only | grep lab/renovatebotwrapper ; then
   cd ./charts
 
   # clean chart sources since files could have been deleted upstream
-  for i in $( ls -1 *.tgz | xargs -t -I{} -P1 tar tf {} 2>/dev/null | cut -f1 -d/ | sort -u ); do
-    if [ -d ./$i/ ]; then
-      rm -fr ./$i/
+  for i in $(find . -maxdepth 1 -name '*.tgz' -print0 | xargs -0 --max-procs=1 --verbose -I{} tar tf {} 2>/dev/null | cut -f1 -d/ | sort -u); do
+    if [ -d ./"$i"/ ]; then
+      rm -fr ./"$i"/
     fi
   done
 
   # extract chart sources
-  ls -1 *.tgz | xargs -t -I{} -P1 tar xvf {}
+  find . -maxdepth 1 -name '*.tgz' -print0 | xargs -0 --max-procs=1 --verbose -I{} tar xvf {}
 
-  rm -v *.tgz
+  rm -v ./*.tgz
 
 fi

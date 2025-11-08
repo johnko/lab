@@ -1,6 +1,6 @@
-- hosts: microk8sservers
-  become: true
+- become: true
   become_user: root
+  hosts: microk8sservers
   tasks:
     # - name: Run commands on others
     #   shell: if which microk8s ; then microk8s {{ item.param }} ; fi
@@ -15,9 +15,8 @@
     #     - { param: leave }
     #     - { param: reset }
     #     - { param: stop }
-
-    - name: Remove microk8s
-      community.general.snap:
+    - community.general.snap:
         name:
           - microk8s
         state: absent
+      name: Remove microk8s
