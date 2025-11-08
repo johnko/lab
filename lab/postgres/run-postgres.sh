@@ -28,15 +28,15 @@ case $1 in
     docker-compose pull
     ;;
   test-new)
-    bash $0 destroy
-    bash $0 up
+    bash "$0" destroy
+    bash "$0" up
     ;;
   top)
     docker-compose top
     ;;
   up | *)
-    bash $0 cert
-    bash $0 pull
+    bash "$0" cert
+    bash "$0" pull
     ## Create and run the stack interactively
     # docker-compose up
     ## Create and run the stack in the background
