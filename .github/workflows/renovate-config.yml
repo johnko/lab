@@ -27,6 +27,7 @@ jobs:
       matrix:
         file:
           - .github/renovate
+          - default
     timeout-minutes: 10
 name: renovate-config
 on:
@@ -34,5 +35,6 @@ on:
     paths:
       - .github/renovate.json
       - .github/workflows/renovate-config.yml
+      - default.json
 permissions:
   contents: read
