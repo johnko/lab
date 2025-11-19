@@ -21,4 +21,4 @@ git checkout $NODE_EXPORTER_VERSION
 
 make build
 
-ls -l node_exporter
+ls -l ./node_exporter
