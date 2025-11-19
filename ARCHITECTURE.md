@@ -4,7 +4,7 @@
 
 ```mermaid
 flowchart LR
-    modem[modem from ISP with DHCP] -->|10GbE Fibre WAN port| 4gbpswww[4Gbps www]
+    modem[modem from ISP with NAT,DHCP] -->|10GbE Fibre WAN port| 4gbpswww[4Gbps www]
 
     light-controller[light controller] -->|1Gb LAN port| modem
 
