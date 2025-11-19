@@ -11,7 +11,7 @@ fi
 
 set -x
 
-if $DOCKER_BIN ps -a | grep build-router-node-exporter | grep Up; then
+if $DOCKER_BIN ps -a | grep build-router-node-exporter | grep -q Up; then
   $DOCKER_BIN cp build-router-node-exporter:/root/node_exporter/node_exporter ./node_exporter
   ssh router 'set -ex ; mkdir -p /tmp/home/root/bin'
   tar czvf - ./node_exporter | ssh router 'cat > /tmp/home/root/bin/deploy_node_exporter.tgz'
