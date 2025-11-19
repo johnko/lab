@@ -16,6 +16,7 @@ if $DOCKER_BIN ps -a | grep build-router-node-exporter | grep -q Up; then
   ssh router 'set -ex ; mkdir -p /tmp/home/root/bin'
   tar czvf - ./node_exporter | ssh router 'cat > /tmp/home/root/bin/deploy_node_exporter.tgz'
   ssh router 'set -ex ; cd /tmp/home/root/bin && tar tzvf ./deploy_node_exporter.tgz && tar xzvf ./deploy_node_exporter.tgz && rm -v /tmp/home/root/bin/deploy_node_exporter.tgz && chown $USER:root /tmp/home/root/bin/node_exporter && ls -l /tmp/home/root/bin/node_exporter'
+  echo "OK: deployed 'node_exporter' to router"
 else
   echo "ERROR: container 'build-router-node-exporter' not running, please run build.sh first"
   exit 1
