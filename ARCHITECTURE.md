@@ -11,7 +11,7 @@ flowchart LR
     1gbwifi[1Gb wifi AP from ISP] -->|1Gb LAN port| modem
     old-devices -->|wifi| 1gbwifi
 
-    10gbewifirouter[10GbE wifi router in AP mode avoid double NAT] -->|10GbE LAN port| modem
+    10gbewifirouter[10GbE wifi router in AP mode to avoid double NAT] -->|10GbE LAN port| modem
     mac -->|5GbE adapther to 10GbE LAN port| 10gbewifirouter
     mac -->|wifi| 10gbewifirouter
     new-devices -->|wifi| 10gbewifirouter
