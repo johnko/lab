@@ -23,6 +23,9 @@ if $DOCKER_BIN ps -a | grep build-router-node-exporter | grep -q Up; then
   ssh router 'set -ex ; test -e /tmp/home/root/bin/._start.sh && rm /tmp/home/root/bin/._start.sh || true'
   ssh router 'set -ex ; ls -al /tmp/home/root/bin/'
   echo "OK: deployed 'node_exporter' to router"
+  if [[ -e ./remote-start.sh ]]; then
+    bash ./remote-start.sh
+  fi
 else
   echo "ERROR: container 'build-router-node-exporter' not running, please run build.sh first"
   exit 1
