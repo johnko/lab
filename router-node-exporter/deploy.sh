@@ -20,7 +20,7 @@ if $DOCKER_BIN ps -a | grep build-router-node-exporter | grep -q Up; then
     # shellcheck disable=SC2029
     ssh router "set -ex ; cd /tmp/home/root/bin && tar tzvf ./deploy_$i.tgz && tar xzvf ./deploy_$i.tgz && rm -v /tmp/home/root/bin/deploy_$i.tgz && chown \$USER:root /tmp/home/root/bin/$i && ls -l /tmp/home/root/bin/$i"
   done
-  ssh router 'set -ex ; test -e /tmp/home/root/bin/._start.sh && rm /tmp/home/root/bin/._start.sh'
+  ssh router 'set -ex ; test -e /tmp/home/root/bin/._start.sh && rm /tmp/home/root/bin/._start.sh || true'
   ssh router 'set -ex ; ls -al /tmp/home/root/bin/'
   echo "OK: deployed 'node_exporter' to router"
 else
