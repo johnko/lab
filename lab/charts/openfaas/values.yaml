@@ -220,7 +220,7 @@ faasnetes:
 #
 # The Jetstream queue-worker is the default queue-worker for OpenFaaS Pro.
 jetstreamQueueWorker:
-  image: ghcr.io/openfaasltd/jetstream-queue-worker:0.4.8
+  image: ghcr.io/openfaasltd/jetstream-queue-worker:0.4.10
   mode: "static"
   consumer:
     inactiveThreshold: "30s"
@@ -442,7 +442,7 @@ nats:
     host: ""
     port: ""
   # The version of NATS Core used with OpenFaaS Pro and JetStream
-  image: nats:2.12.1
+  image: nats:2.12.2
   resources:
     requests:
       memory: "120Mi"
