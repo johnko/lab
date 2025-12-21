@@ -31,7 +31,7 @@ dependencies:
     version: 3.13.0
   - name: openfaas
     repository: https://openfaas.github.io/faas-netes/
-    version: 14.2.131
+    version: 14.2.132
   - name: pihole
     repository: https://mojo2600.github.io/pihole-kubernetes/
     version: 2.34.0
