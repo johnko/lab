@@ -1,7 +1,7 @@
 dependencies:
 - name: argo-cd
   repository: https://argoproj.github.io/argo-helm
-  version: 9.1.7
+  version: 9.1.9
 - name: cert-manager
   repository: https://charts.jetstack.io
   version: v1.19.2
@@ -29,5 +29,5 @@ dependencies:
 - name: traefik
   repository: https://traefik.github.io/charts
   version: 37.4.0
-digest: sha256:271f7bdec390746c3bec061f1f24710075935ff9ed5bea9cfcce3889d435cdcc
-generated: "2025-12-21T22:32:54.761990962Z"
+digest: sha256:f3f473ced247a4817ec87a50a8978a266178ee44e7ee7261cd15823d3f22222b
+generated: "2025-12-28T12:44:38.18024964Z"
