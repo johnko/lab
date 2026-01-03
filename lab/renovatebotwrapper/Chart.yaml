@@ -17,15 +17,15 @@ dependencies:
   - name: base
     # istio
     repository: https://istio-release.storage.googleapis.com/charts
-    version: 1.28.1
+    version: 1.28.2
   - name: istiod
     # istio
     repository: https://istio-release.storage.googleapis.com/charts
-    version: 1.28.1
+    version: 1.28.2
   - name: gateway
     # istio
     repository: https://istio-release.storage.googleapis.com/charts
-    version: 1.28.1
+    version: 1.28.2
   - name: metrics-server
     repository: https://kubernetes-sigs.github.io/metrics-server/
     version: 3.13.0
