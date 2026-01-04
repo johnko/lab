@@ -37,7 +37,7 @@ dependencies:
     version: 2.35.0
   - name: traefik
     repository: https://traefik.github.io/charts
-    version: 37.4.0
+    version: 38.0.1
 description: A wrapper Helm chart representing the upstream charts tracked in this repo. Use with RenovateBot to automate upgrades.
 name: renovatebotwrapper
 # A chart can be either an 'application' or a 'library' chart.
