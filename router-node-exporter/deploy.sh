@@ -9,10 +9,20 @@ else
   fi
 fi
 
+exit_error() {
+  echo "ERROR: container 'build-router-node-exporter' not running, please run build.sh first"
+  exit 1
+}
+
 set -x
 
-if $DOCKER_BIN ps -a | grep build-router-node-exporter | grep -q Up; then
-  $DOCKER_BIN cp build-router-node-exporter:/root/node_exporter/node_exporter ./node_exporter
+if [[ -e ./node_exporter ]] || $DOCKER_BIN ps -a | grep build-router-node-exporter | grep -q Up; then
+  if [[ ! -e ./node_exporter ]]; then
+    $DOCKER_BIN cp build-router-node-exporter:/root/node_exporter/node_exporter ./node_exporter
+  fi
+  if [[ ! -e ./node_exporter ]]; then
+    exit_error
+  fi
   ssh router 'set -ex ; mkdir -p /tmp/home/root/bin'
   for i in node_exporter start.sh; do
     # shellcheck disable=SC2029
@@ -27,6 +37,5 @@ if $DOCKER_BIN ps -a | grep build-router-node-exporter | grep -q Up; then
     bash ./remote-start.sh
   fi
 else
-  echo "ERROR: container 'build-router-node-exporter' not running, please run build.sh first"
-  exit 1
+  exit_error
 fi
