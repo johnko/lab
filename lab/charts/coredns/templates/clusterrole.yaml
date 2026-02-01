@@ -4,6 +4,10 @@ kind: ClusterRole
 metadata:
   name: {{ template "coredns.clusterRoleName" . }}
   labels: {{- include "coredns.labels" . | nindent 4 }}
+{{- with .Values.customAnnotations }}
+  annotations:
+{{- toYaml . | nindent 4 }}
+{{- end }}
 rules:
 - apiGroups:
   - ""
