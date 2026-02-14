@@ -4,7 +4,7 @@ dependencies:
   version: 9.3.7
 - name: cert-manager
   repository: https://charts.jetstack.io
-  version: v1.19.2
+  version: v1.19.3
 - name: coredns
   repository: https://coredns.github.io/helm
   version: 1.45.2
@@ -29,5 +29,5 @@ dependencies:
 - name: traefik
   repository: https://traefik.github.io/charts
   version: 39.0.0
-digest: sha256:63e173b63d0e269352eaca227be19189310c2412aed67bb5a7a47382f636d17b
-generated: "2026-02-08T21:49:57.35040683Z"
+digest: sha256:0512401ccca8c4332aa12f122d81a4e277191cc33cb0ab6bf0f3f0a2f77d5a68
+generated: "2026-02-14T12:45:16.196163505Z"
