@@ -10,13 +10,13 @@ dependencies:
   version: 1.45.2
 - name: base
   repository: https://istio-release.storage.googleapis.com/charts
-  version: 1.28.3
+  version: 1.28.4
 - name: istiod
   repository: https://istio-release.storage.googleapis.com/charts
-  version: 1.28.3
+  version: 1.28.4
 - name: gateway
   repository: https://istio-release.storage.googleapis.com/charts
-  version: 1.28.3
+  version: 1.28.4
 - name: metrics-server
   repository: https://kubernetes-sigs.github.io/metrics-server/
   version: 3.13.0
@@ -29,5 +29,5 @@ dependencies:
 - name: traefik
   repository: https://traefik.github.io/charts
   version: 39.0.1
-digest: sha256:6eef455384616febb81148f8cfa591e8c183ae856d6f7ad6050b623914717f16
-generated: "2026-02-28T12:45:04.276938263Z"
+digest: sha256:4d39a614caa5c3e4ef4910438d54b5e29965f558c886ffe9b854ea79d8ed19d9
+generated: "2026-03-01T00:18:19.552473959Z"
