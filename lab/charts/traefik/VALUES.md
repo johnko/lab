@@ -1,6 +1,6 @@
 # traefik
 
-![Version: 39.0.2](https://img.shields.io/badge/Version-39.0.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v3.6.8](https://img.shields.io/badge/AppVersion-v3.6.8-informational?style=flat-square)
+![Version: 39.0.4](https://img.shields.io/badge/Version-39.0.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v3.6.9](https://img.shields.io/badge/AppVersion-v3.6.9-informational?style=flat-square)
 
 A Traefik based Kubernetes ingress controller
 
@@ -447,7 +447,6 @@ Kubernetes: `>=1.22.0-0`
 | rbac.aggregateTo | list | `[]` |  |
 | rbac.enabled | bool | `true` | Whether Role Based Access Control objects like roles and rolebindings should be created |
 | rbac.namespaced | bool | `false` |  |
-| rbac.secretResourceNames | list | `[]` |  |
 | readinessProbe.failureThreshold | int | `1` | The number of consecutive failures allowed before considering the probe as failed. |
 | readinessProbe.initialDelaySeconds | int | `2` | The number of seconds to wait before starting the first probe. |
 | readinessProbe.periodSeconds | int | `10` | The number of seconds to wait between consecutive probes. |
