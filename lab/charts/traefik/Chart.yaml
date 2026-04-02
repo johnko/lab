@@ -1,12 +1,9 @@
 annotations:
   artifacthub.io/changes: |
-    - "fix: :bug: handle experimental-master and fail gracefully"
-    - "fix(nginx): add required RBAC for v3.7"
-    - "fix(gateway): setting port value for `websecure` listener can fail"
-    - "feat: upgrade traefik to version v3.6.10"
-    - "chore(release): publish v39.0.5"
+    - "feat: :rocket: upgrade traefik to version v3.6.11"
+    - "chore(release): :rocket: publish v39.0.6"
 apiVersion: v2
-appVersion: v3.6.10
+appVersion: v3.6.11
 description: A Traefik based Kubernetes ingress controller
 home: https://traefik.io/
 icon: https://raw.githubusercontent.com/traefik/traefik/master/docs/content/assets/img/traefik.logo.png
@@ -26,4 +23,4 @@ sources:
 - https://github.com/traefik/traefik-helm-chart
 - https://github.com/traefik/traefik
 type: application
-version: 39.0.5
+version: 39.0.6
