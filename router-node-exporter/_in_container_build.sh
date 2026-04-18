@@ -2,7 +2,7 @@
 set -euxo pipefail
 
 # renovate: datasource=github-releases depName=prometheus/node_exporter packageName=prometheus/node_exporter
-NODE_EXPORTER_VERSION=v1.10.2
+NODE_EXPORTER_VERSION=v1.11.1
 
 apt update -y
 
