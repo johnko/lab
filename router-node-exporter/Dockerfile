@@ -1,4 +1,4 @@
-FROM --platform=$BUILDPLATFORM ubuntu:24.04
+FROM --platform=$BUILDPLATFORM ubuntu:26.04
 # https://docs.docker.com/build/building/multi-platform/
 ARG TARGETOS
 ARG TARGETARCH
