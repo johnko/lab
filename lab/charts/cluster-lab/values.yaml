@@ -145,6 +145,19 @@ cluster:
       syncPolicy: {} # disable autosync to avoid port name flipflops
 
 
+    gateway-api-crd:
+      annotations:
+        argocd.argoproj.io/sync-wave: "1"
+      destination:
+        namespace: kube-system
+      source:
+        path: lab/charts/gateway-api-crd
+        repoURL: *myrepo
+        helm:
+          values: {}
+      syncPolicy: {} # disable autosync to avoid port name flipflops
+
+
     ingressroutes:
       annotations:
         argocd.argoproj.io/sync-wave: "3"
