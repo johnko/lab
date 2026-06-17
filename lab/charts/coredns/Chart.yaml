@@ -1,7 +1,7 @@
 annotations:
   artifacthub.io/changes: |
     - kind: added
-      description: Add configurable dnsPolicy for deployment
+      description: Add scrapeTimeout, scheme, honorLabels, tlsConfig, relabelings, and metricRelabelings options to ServiceMonitor endpoint
 apiVersion: v2
 appVersion: 1.13.1
 description: CoreDNS is a DNS server that chains plugins and provides Kubernetes DNS
@@ -21,4 +21,4 @@ name: coredns
 sources:
 - https://github.com/coredns/coredns
 type: application
-version: 1.45.2
+version: 1.46.0
