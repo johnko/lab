@@ -590,7 +590,7 @@ See [values.yaml](./values.yaml) for detailed configuration.
 | `nats.image` | Container image used for NATS | See [values.yaml](./values.yaml) |
 | `nats.resources` | Resource limits and requests for the nats pods | See [values.yaml](./values.yaml) |
 | `nats.streamReplication` | JetStream stream replication factor. For production a value of at least 3 is recommended. | `1` |
-| `queueWorker.ackWait` | Max duration of any async task/request | `60s` |
+| `queueWorker.ackWait` | Do not change from 60s. Only `gateway.upstreamTimeout` sets the maximum function duration. See [Async reference](https://docs.openfaas.com/reference/async/) | `60s` |
 | `queueWorker.image` | Container image used for the CE edition of the queue-worker| See [values.yaml](./values.yaml) |
 | `queueWorker.maxInflight` | Control the concurrent invocations | `1` |
 | `queueWorker.replicas` | Replicas of the queue-worker, pick more than `1` for HA | `1` |
