@@ -64,7 +64,7 @@ functions:
     failureThreshold: 3
 
 gatewayPro:
-  image: ghcr.io/openfaasltd/gateway:0.5.20
+  image: ghcr.io/openfaasltd/gateway:0.5.21
   pprof: false
 
 gateway:
@@ -152,7 +152,7 @@ eventWorker:
 
 # For OpenFaaS Pro and the Function CRD
 operator:
-  image: ghcr.io/openfaasltd/faas-netes:0.5.93
+  image: ghcr.io/openfaasltd/faas-netes:0.5.94
   create: false
   logs:
     debug: false
@@ -199,7 +199,7 @@ operator:
     successThreshold: 1
 
 faasnetesPro:
-  image: ghcr.io/openfaasltd/faas-netes:0.5.93
+  image: ghcr.io/openfaasltd/faas-netes:0.5.94
   logs:
     debug: false
     format: "console"
@@ -220,7 +220,7 @@ faasnetes:
 #
 # The Jetstream queue-worker is the default queue-worker for OpenFaaS Pro.
 jetstreamQueueWorker:
-  image: ghcr.io/openfaasltd/jetstream-queue-worker:0.5.7
+  image: ghcr.io/openfaasltd/jetstream-queue-worker:0.5.8
   mode: "static"
   # Enable adaptive concurrency limiting for functions.
   # This setting only takes effect when jetstreamQueueWorker.mode is set to "function".
@@ -279,6 +279,8 @@ queueWorker:
   # Control HA of queue-worker
   replicas: 1
   queueGroup: "faas"
+  # Do not change ackWait from 60s. Only gateway.upstreamTimeout sets the
+  # maximum function duration.
   ackWait: "60s"
   resources:
     requests:
@@ -289,7 +291,7 @@ queueWorker:
 ## Advanced auto-scaler for scaling functions on RPS, CPU and in-flight requests
 ## Includes: scale to zero
 autoscaler:
-  image: ghcr.io/openfaasltd/autoscaler:0.3.28
+  image: ghcr.io/openfaasltd/autoscaler:0.3.29
 
   # Default value for "com.openfaas.scale.target" when not set via label
   defaultTarget: 50
@@ -397,7 +399,7 @@ iam:
 ## if you wish to retain the metrics for a longer period, you should
 ## scrape this instance from an external Prometheus server
 prometheus:
-  image: prom/prometheus:v3.11.3
+  image: prom/prometheus:v3.12.0
   create: true
   retention:
     time: 15d
@@ -445,7 +447,7 @@ nats:
     host: ""
     port: ""
   # The version of NATS Core used with OpenFaaS Pro and JetStream
-  image: nats:2.14.0
+  image: nats:2.14.2
   resources:
     requests:
       memory: "120Mi"
