@@ -64,7 +64,7 @@ functions:
     failureThreshold: 3
 
 gatewayPro:
-  image: ghcr.io/openfaasltd/gateway:0.5.21
+  image: ghcr.io/openfaasltd/gateway:0.5.22
   pprof: false
 
 gateway:
@@ -152,7 +152,7 @@ eventWorker:
 
 # For OpenFaaS Pro and the Function CRD
 operator:
-  image: ghcr.io/openfaasltd/faas-netes:0.5.94
+  image: ghcr.io/openfaasltd/faas-netes:0.5.95
   create: false
   logs:
     debug: false
@@ -199,7 +199,7 @@ operator:
     successThreshold: 1
 
 faasnetesPro:
-  image: ghcr.io/openfaasltd/faas-netes:0.5.94
+  image: ghcr.io/openfaasltd/faas-netes:0.5.95
   logs:
     debug: false
     format: "console"
@@ -220,7 +220,7 @@ faasnetes:
 #
 # The Jetstream queue-worker is the default queue-worker for OpenFaaS Pro.
 jetstreamQueueWorker:
-  image: ghcr.io/openfaasltd/jetstream-queue-worker:0.5.8
+  image: ghcr.io/openfaasltd/jetstream-queue-worker:0.5.9
   mode: "static"
   # Enable adaptive concurrency limiting for functions.
   # This setting only takes effect when jetstreamQueueWorker.mode is set to "function".
@@ -399,7 +399,7 @@ iam:
 ## if you wish to retain the metrics for a longer period, you should
 ## scrape this instance from an external Prometheus server
 prometheus:
-  image: prom/prometheus:v3.12.0
+  image: prom/prometheus:v3.13.0
   create: true
   retention:
     time: 15d
@@ -447,7 +447,7 @@ nats:
     host: ""
     port: ""
   # The version of NATS Core used with OpenFaaS Pro and JetStream
-  image: nats:2.14.2
+  image: nats:2.14.3
   resources:
     requests:
       memory: "120Mi"
@@ -455,7 +455,7 @@ nats:
 
 ## alertmanager is only used for OpenFaaS CE
 alertmanager:
-  image: prom/alertmanager:v0.32.1
+  image: prom/alertmanager:v0.33.0
   create: true
   resources:
     requests:
