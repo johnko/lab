@@ -25,9 +25,9 @@ dependencies:
   version: 15.0.9
 - name: pihole
   repository: https://mojo2600.github.io/pihole-kubernetes/
-  version: 2.37.0
+  version: 2.38.0
 - name: traefik
   repository: https://traefik.github.io/charts
   version: 41.0.2
-digest: sha256:b05370dcc364ff35412e7c84bbdf13a545dfc7a65979b495f04dc5a246771093
-generated: "2026-08-02T03:32:07.548588054Z"
+digest: sha256:af61378a4dd306e3a87181e1a88d4490357e831e34adcbf6314562e659aefb35
+generated: "2026-08-02T05:01:43.313258474Z"
