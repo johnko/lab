@@ -17,4 +17,4 @@ sources:
 - https://github.com/openfaas/faas
 - https://github.com/openfaas/faas-netes
 type: application
-version: 15.0.9
+version: 15.0.11

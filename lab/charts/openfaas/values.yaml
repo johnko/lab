@@ -64,11 +64,11 @@ functions:
     failureThreshold: 3
 
 gatewayPro:
-  image: ghcr.io/openfaasltd/gateway:0.5.22
+  image: ghcr.io/openfaasltd/gateway:0.5.24
   pprof: false
 
 gateway:
-  image: ghcr.io/openfaas/gateway:0.27.13
+  image: ghcr.io/openfaas/gateway:0.27.14
   readTimeout: "1m05s"
   writeTimeout: "1m05s"
   upstreamTimeout: "1m"  # Must be smaller than read/write_timeout
@@ -152,7 +152,7 @@ eventWorker:
 
 # For OpenFaaS Pro and the Function CRD
 operator:
-  image: ghcr.io/openfaasltd/faas-netes:0.5.95
+  image: ghcr.io/openfaasltd/faas-netes:0.5.97
   create: false
   logs:
     debug: false
@@ -199,7 +199,7 @@ operator:
     successThreshold: 1
 
 faasnetesPro:
-  image: ghcr.io/openfaasltd/faas-netes:0.5.95
+  image: ghcr.io/openfaasltd/faas-netes:0.5.97
   logs:
     debug: false
     format: "console"
@@ -399,7 +399,7 @@ iam:
 ## if you wish to retain the metrics for a longer period, you should
 ## scrape this instance from an external Prometheus server
 prometheus:
-  image: prom/prometheus:v3.13.0
+  image: prom/prometheus:v3.13.2
   create: true
   retention:
     time: 15d
@@ -447,7 +447,7 @@ nats:
     host: ""
     port: ""
   # The version of NATS Core used with OpenFaaS Pro and JetStream
-  image: nats:2.14.3
+  image: nats:2.14.4
   resources:
     requests:
       memory: "120Mi"
@@ -455,7 +455,7 @@ nats:
 
 ## alertmanager is only used for OpenFaaS CE
 alertmanager:
-  image: prom/alertmanager:v0.33.0
+  image: prom/alertmanager:v0.33.1
   create: true
   resources:
     requests:
