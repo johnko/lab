@@ -28,7 +28,7 @@ dependencies:
     version: 1.30.3
   - name: metrics-server
     repository: https://kubernetes-sigs.github.io/metrics-server/
-    version: 3.13.1
+    version: 3.14.0
   - name: openfaas
     repository: https://openfaas.github.io/faas-netes/
     version: 15.0.11

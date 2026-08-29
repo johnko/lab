@@ -19,7 +19,7 @@ dependencies:
   version: 1.30.3
 - name: metrics-server
   repository: https://kubernetes-sigs.github.io/metrics-server/
-  version: 3.13.1
+  version: 3.14.0
 - name: openfaas
   repository: https://openfaas.github.io/faas-netes/
   version: 15.0.11
@@ -29,5 +29,5 @@ dependencies:
 - name: traefik
   repository: https://traefik.github.io/charts
   version: 41.3.0
-digest: sha256:dbc8300585145d39aa3e9e4a3927591fd8663841e4e387277dccf64f96d1b18c
-generated: "2026-08-29T19:33:25.163304928Z"
+digest: sha256:9aa6d71c6d2d822dd9d2a802529d5f5d0cd24e5cbb5629eef6d30b409213b5ac
+generated: "2026-08-29T19:37:54.870845697Z"
