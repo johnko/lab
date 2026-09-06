@@ -152,7 +152,7 @@ eventWorker:
 
 # For OpenFaaS Pro and the Function CRD
 operator:
-  image: ghcr.io/openfaasltd/faas-netes:0.5.97
+  image: ghcr.io/openfaasltd/faas-netes:0.5.99
   create: false
   logs:
     debug: false
@@ -199,7 +199,7 @@ operator:
     successThreshold: 1
 
 faasnetesPro:
-  image: ghcr.io/openfaasltd/faas-netes:0.5.97
+  image: ghcr.io/openfaasltd/faas-netes:0.5.99
   logs:
     debug: false
     format: "console"
@@ -220,7 +220,7 @@ faasnetes:
 #
 # The Jetstream queue-worker is the default queue-worker for OpenFaaS Pro.
 jetstreamQueueWorker:
-  image: ghcr.io/openfaasltd/jetstream-queue-worker:0.5.9
+  image: ghcr.io/openfaasltd/jetstream-queue-worker:0.5.10
   mode: "static"
   # Enable adaptive concurrency limiting for functions.
   # This setting only takes effect when jetstreamQueueWorker.mode is set to "function".
@@ -271,6 +271,7 @@ queueWorkerPro:
   printResponseBody: false
   # Control the concurrent invocations
   maxInflight: 50
+  allowedCallbackURLs: ["*"]
 
 # Community Edition, maxInflight is 1
 # Name of shared queue is "faas-request"
@@ -329,7 +330,7 @@ autoscaler:
 ## To use with port-forwarding, set publicURL to
 ## http://127.0.0.1
 dashboard:
-  image: ghcr.io/openfaasltd/openfaas-dashboard:0.6.11
+  image: ghcr.io/openfaasltd/openfaas-dashboard:0.6.12
 
   # publicURL for the dashboard itself
   # i.e. https://dashboard.example.com
@@ -359,7 +360,7 @@ dashboard:
 # OpenFaaS Enterprise (OpenFaaS IAM)
 # OIDC plugin for authentication on the OpenFaaS REST API
 oidcAuthPlugin:
-  image: ghcr.io/openfaasltd/openfaas-oidc-plugin:0.7.13
+  image: ghcr.io/openfaasltd/openfaas-oidc-plugin:0.7.14
   insecureTLS: false
   replicas: 1
   securityContext: true
@@ -399,7 +400,7 @@ iam:
 ## if you wish to retain the metrics for a longer period, you should
 ## scrape this instance from an external Prometheus server
 prometheus:
-  image: prom/prometheus:v3.13.2
+  image: prom/prometheus:v3.14.0
   create: true
   retention:
     time: 15d
@@ -447,7 +448,7 @@ nats:
     host: ""
     port: ""
   # The version of NATS Core used with OpenFaaS Pro and JetStream
-  image: nats:2.14.4
+  image: nats:2.14.5
   resources:
     requests:
       memory: "120Mi"
@@ -455,7 +456,7 @@ nats:
 
 ## alertmanager is only used for OpenFaaS CE
 alertmanager:
-  image: prom/alertmanager:v0.33.1
+  image: prom/alertmanager:v0.34.0
   create: true
   resources:
     requests:

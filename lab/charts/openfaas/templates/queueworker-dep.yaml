@@ -113,6 +113,8 @@ spec:
           value: "{{ .Values.queueWorkerPro.httpRetryCodes }}"
         - name: backoff
           value: "{{ .Values.queueWorkerPro.backoff }}"
+        - name: "allowed_callback_urls"
+          value: "{{ join "," .Values.queueWorkerPro.allowedCallbackURLs }}"
 
         {{- if .Values.securityContext }}
         securityContext:

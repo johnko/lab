@@ -582,6 +582,7 @@ See [values.yaml](./values.yaml) for detailed configuration.
 | `jetstreamQueueWorker.logs.debug` | Log debug messages | `false` |
 | `jetstreamQueueWorker.logs.format` | Set the log format, supports `console` or `json` | `console` |
 | `jetstreamQueueWorker.adaptiveConcurrency` | Enable adaptive concurrency limiting for functions. This setting only takes effect when `jetstreamQueueWorker.mode` is set to `function`. | `true` |
+| `queueWorkerPro.allowedCallbackURLs` | List of glob patterns for URLs allowed to receive async callbacks. Defaults to `["*"]` (allow all). Set to empty list `[]` to deny all | `["*"]` |
 | `nats.channel` | The name of the NATS Streaming channel or NATS JetStream stream to use for asynchronous function invocations | `faas-request` |
 | `nats.external.clusterName` | The name of the externally-managed NATS Streaming server | `""` |
 | `nats.external.enabled` | Whether to use an externally-managed NATS Streaming server | `false` |
