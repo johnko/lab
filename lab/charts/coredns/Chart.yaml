@@ -1,9 +1,9 @@
 annotations:
   artifacthub.io/changes: |
     - kind: added
-      description: Allow separate labels and selector for the cluster-proportional-autoscaler Deployment
+      description: Add optional replica count and PodDisruptionBudget for the cluster-proportional-autoscaler
 apiVersion: v2
-appVersion: 1.14.6
+appVersion: 1.14.7
 description: CoreDNS is a DNS server that chains plugins and provides Kubernetes DNS
   Services
 home: https://coredns.io
@@ -21,4 +21,4 @@ name: coredns
 sources:
 - https://github.com/coredns/coredns
 type: application
-version: 1.47.1
+version: 1.48.2
