@@ -7,7 +7,7 @@ dependencies:
   version: v1.21.3
 - name: coredns
   repository: https://coredns.github.io/helm
-  version: 1.49.0
+  version: 1.50.2
 - name: base
   repository: https://istio-release.storage.googleapis.com/charts
   version: 1.30.8
@@ -29,5 +29,5 @@ dependencies:
 - name: traefik
   repository: https://traefik.github.io/charts
   version: 42.2.0
-digest: sha256:fe6c5aff2415bd9b1d30aba26387b729361757f533cd50e358c332e0368ebb6a
-generated: "2026-11-14T21:53:43.002897736Z"
+digest: sha256:85fd59708c5d648d7e224aa40ff97b32281dd37dd8f9b533e6eab43f0931c638
+generated: "2026-11-14T21:59:56.435811435Z"
