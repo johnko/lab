@@ -1,7 +1,7 @@
 annotations:
   artifacthub.io/changes: |
-    - kind: security
-      description: serviceAccount.create defaults to true, so CoreDNS runs as its own ServiceAccount and the chart's ClusterRole is no longer bound to the namespace's default ServiceAccount, which every pod without its own account uses
+    - kind: fixed
+      description: Default the Service and container ports when a server block has no port set, instead of rendering null ports
 apiVersion: v2
 appVersion: 1.14.7
 description: CoreDNS is a DNS server that chains plugins and provides Kubernetes DNS
@@ -21,4 +21,4 @@ name: coredns
 sources:
 - https://github.com/coredns/coredns
 type: application
-version: 1.49.0
+version: 1.50.2
