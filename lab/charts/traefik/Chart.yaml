@@ -1,14 +1,8 @@
 annotations:
   artifacthub.io/changes: |
-    - kind: fixed
-      description: "fix(service): reject removed service.type value"
-    - kind: fixed
-      description: "fix(providers): update CRD safeNaming to reflect warning language"
     - kind: added
-      description: "feat: support traefik v3.8-rc1"
-    - kind: added
-      description: "feat(hub): support traefik hub v3.21.8"
-  traefik.io/hub-max-version: v3.21.8
+      description: "feat(hub): support traefik hub v3.21.10"
+  traefik.io/hub-max-version: v3.21.10
   traefik.io/hub-min-version: v3.19.3
   traefik.io/proxy-max-version: v3.7.17
   traefik.io/proxy-min-version: v3.6.0
@@ -33,4 +27,4 @@ sources:
 - https://github.com/traefik/traefik-helm-chart
 - https://github.com/traefik/traefik
 type: application
-version: 42.3.1
+version: 42.3.2
