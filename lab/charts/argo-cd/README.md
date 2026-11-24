@@ -111,10 +111,59 @@ extraObjects:
 
 Redis reads its certificate when it starts, so restart it after a renewal, for example with [Reloader](https://github.com/stakater/Reloader). `redis.tls` does not apply to `redis-ha` or to an external Redis.
 
+## Extra objects
+
+`extraObjects` takes a list or a map. A list is enough when all objects are in one values file:
+
+```yaml
+extraObjects:
+  - apiVersion: v1
+    kind: ConfigMap
+    metadata:
+      name: my-config
+    data:
+      key: value
+```
+
+With a map, each values file can add its own objects, because Helm merges maps but replaces lists. For example, plain manifests in `values.yaml` and a Secret in an encrypted `secrets.yaml`:
+
+```yaml
+# values.yaml
+extraObjects:
+  argocd-network-policy:
+    apiVersion: networking.k8s.io/v1
+    kind: NetworkPolicy
+    metadata:
+      name: argocd
+    spec:
+      podSelector: {}
+      policyTypes: [Ingress]
+      ingress:
+        - from:
+            - podSelector: {}
+```
+
+```yaml
+# secrets.yaml
+extraObjects:
+  repo-credentials:
+    apiVersion: v1
+    kind: Secret
+    metadata:
+      name: repo-credentials
+      labels:
+        argocd.argoproj.io/secret-type: repository
+    stringData:
+      url: https://github.com/example/repo.git
+      password: my-token
+```
+
+The map keys are only names. Use a unique key for each object.
+
 ## Ingress configuration
 
 Please refer to the [Operator Manual](https://argo-cd.readthedocs.io/en/stable/operator-manual/ingress/#ingress-configurationh) for details as the samples
-below corespond to their respective sections.
+below correspond to their respective sections.
 
 ### SSL-Passthrough
 
@@ -552,6 +601,18 @@ For full list of changes please check ArtifactHub [changelog].
 
 Highlighted versions provide information about additional steps that should be performed by user when upgrading to newer version.
 
+### 10.17.0
+
+Pod templates no longer carry the `helm.sh/chart` label. It changed on every chart
+release, and because it sat inside the pod template every component was recreated on
+`helm upgrade` even when neither the image nor the configuration had changed. The label
+remains on the objects themselves, so `kubectl get deploy -L helm.sh/chart` is unaffected.
+
+**Upgrading rolls every Argo CD pod once**, as the pod templates change for the last
+time. After that a chart release on its own no longer restarts anything. If you select
+pods on `helm.sh/chart` (a `kube_pod_labels` join, a NetworkPolicy, a policy engine),
+move to the object-level label or add your own through `global.podLabels`.
+
 ### 10.13.0
 
 The chart now creates a headless Service for the application controller, named like the controller StatefulSet. If you created that Service yourself, Helm cannot adopt it and the upgrade fails. Delete it before upgrading:
@@ -762,7 +823,7 @@ This version adds `global.affinity` options that are used as a presets. Override
 ### 5.19.0
 
 This version consolidates config for custom repository TLS certificates and SSH known hosts. If you provided these values (`configs.knownHosts.*`, `configs.knownHostsAnnotations`, `configs.tlsCerts`, `configs.tlsCertsAnnotations`) please move them into new `configs.ssh` and `configs.tls` sections.
-You can also use new option `configs.ssh.extraHosts` to configure your SSH keys without maintaing / overwritting keys for public Git repositories.
+You can also use new option `configs.ssh.extraHosts` to configure your SSH keys without maintaining / overwriting keys for public Git repositories.
 
 ### 5.13.0
 
@@ -1025,7 +1086,7 @@ NAME: my-release
 | crds.keep | bool | `true` | Keep CRDs on chart uninstall |
 | createAggregateRoles | bool | `false` | Create aggregated roles that extend existing cluster roles to interact with argo-cd resources |
 | createClusterRoles | bool | `true` | Create cluster roles for cluster-wide installation. |
-| extraObjects | list | `[]` | Array of extra K8s manifests to deploy |
+| extraObjects | list | `[]` | Extra K8s manifests to deploy, as a list or a map. A map can be split over several values files, because Helm merges maps but replaces lists. |
 | fullnameOverride | string | `""` | String to fully override `"argo-cd.fullname"` |
 | kubeVersionOverride | string | `""` | Override the Kubernetes version, which is used to evaluate certain manifests |
 | nameOverride | string | `"argocd"` | Provide a name in place of `argocd` |
@@ -1069,7 +1130,7 @@ NAME: my-release
 | global.priorityClassName | string | `""` | Default priority class for all components |
 | global.revisionHistoryLimit | int | `3` | Number of old deployment ReplicaSets to retain. The rest will be garbage collected. |
 | global.runtimeClassName | string | `""` | Runtime class name for all components |
-| global.securityContext | object | `{}` (See [values.yaml]) | Toggle and define pod-level security context. |
+| global.securityContext | object | See [values.yaml] | Toggle and define pod-level security context. |
 | global.statefulsetAnnotations | object | `{}` | Annotations for the all deployed Statefulsets |
 | global.statefulsetLabels | object | `{}` | Labels for the all deployed Statefulsets |
 | global.tolerations | list | `[]` | Default tolerations for all components |
@@ -1664,7 +1725,7 @@ NAME: my-release
 | dex.pdb.annotations | object | `{}` | Annotations to be added to Dex server pdb |
 | dex.pdb.enabled | bool | `false` | Deploy a [PodDisruptionBudget] for the Dex server |
 | dex.pdb.labels | object | `{}` | Labels to be added to Dex server pdb |
-| dex.pdb.maxUnavailable | string | `""` | Number of pods that are unavailble after eviction as number or percentage (eg.: 50%). |
+| dex.pdb.maxUnavailable | string | `""` | Number of pods that are unavailable after eviction as number or percentage (eg.: 50%). |
 | dex.pdb.minAvailable | string | `""` (defaults to 0 if not specified) | Number of pods that are available after eviction as number or percentage (eg.: 50%) |
 | dex.pdb.unhealthyPodEvictionPolicy | string | `""` | Policy for evicting unhealthy (not ready) pods, either `IfHealthyBudget` or `AlwaysAllow` |
 | dex.podAnnotations | object | `{}` | Annotations to be added to the Dex server pods |
@@ -1679,6 +1740,7 @@ NAME: my-release
 | dex.readinessProbe.periodSeconds | int | `10` | How often (in seconds) to perform the [probe] |
 | dex.readinessProbe.successThreshold | int | `1` | Minimum consecutive successes for the [probe] to be considered successful after having failed |
 | dex.readinessProbe.timeoutSeconds | int | `1` | Number of seconds after which the [probe] times out |
+| dex.replicas | int | `1` | The number of Dex server pods to run |
 | dex.resources | object | `{}` | Resource limits and requests for dex |
 | dex.runtimeClassName | string | `""` (defaults to global.runtimeClassName) | Runtime class name for Dex |
 | dex.serviceAccount.annotations | object | `{}` | Annotations applied to created service account |
@@ -1699,6 +1761,7 @@ NAME: my-release
 | dex.startupProbe.periodSeconds | int | `10` | How often (in seconds) to perform the [probe] |
 | dex.startupProbe.successThreshold | int | `1` | Minimum consecutive successes for the [probe] to be considered successful after having failed |
 | dex.startupProbe.timeoutSeconds | int | `1` | Number of seconds after which the [probe] times out |
+| dex.storage.type | string | `""` (read from `storage.type` in `configs.cm."dex.config"`, `memory` when unset) | Dex storage type. Renders the RBAC for `kubernetes` storage and validates `dex.replicas`. |
 | dex.terminationGracePeriodSeconds | int | `30` | terminationGracePeriodSeconds for container lifecycle hook |
 | dex.tolerations | list | `[]` (defaults to global.tolerations) | [Tolerations] for use with node taints |
 | dex.topologySpreadConstraints | list | `[]` (defaults to global.topologySpreadConstraints) | Assign custom [TopologySpreadConstraints] rules to dex |
@@ -1788,7 +1851,7 @@ NAME: my-release
 | redis.pdb.annotations | object | `{}` | Annotations to be added to Redis pdb |
 | redis.pdb.enabled | bool | `false` | Deploy a [PodDisruptionBudget] for the Redis |
 | redis.pdb.labels | object | `{}` | Labels to be added to Redis pdb |
-| redis.pdb.maxUnavailable | string | `""` | Number of pods that are unavailble after eviction as number or percentage (eg.: 50%). |
+| redis.pdb.maxUnavailable | string | `""` | Number of pods that are unavailable after eviction as number or percentage (eg.: 50%). |
 | redis.pdb.minAvailable | string | `""` (defaults to 0 if not specified) | Number of pods that are available after eviction as number or percentage (eg.: 50%) |
 | redis.pdb.unhealthyPodEvictionPolicy | string | `""` | Policy for evicting unhealthy (not ready) pods, either `IfHealthyBudget` or `AlwaysAllow` |
 | redis.podAnnotations | object | `{}` | Annotations to be added to the Redis server pods |
@@ -1913,7 +1976,7 @@ If you use an External Redis (See Option 3 above), this Job is not deployed.
 | redisSecretInit.priorityClassName | string | `""` (defaults to global.priorityClassName) | Priority class for Redis secret-init Job |
 | redisSecretInit.resources | object | `{}` | Resource limits and requests for Redis secret-init Job |
 | redisSecretInit.runtimeClassName | string | `""` (defaults to global.runtimeClassName) | Runtime class name for the Redis secret-init Job |
-| redisSecretInit.securityContext | object | `{}` | Redis secret-init Job pod-level security context |
+| redisSecretInit.securityContext | object | See [values.yaml] | Redis secret-init Job pod-level security context |
 | redisSecretInit.serviceAccount.annotations | object | `{}` | Annotations applied to created service account |
 | redisSecretInit.serviceAccount.automountServiceAccountToken | bool | `true` | Automount API credentials for the Service Account |
 | redisSecretInit.serviceAccount.create | bool | `true` | Create a service account for the redis pod |
