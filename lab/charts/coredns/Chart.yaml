@@ -1,7 +1,7 @@
 annotations:
   artifacthub.io/changes: |
-    - kind: fixed
-      description: Default the Service and container ports when a server block has no port set, instead of rendering null ports
+    - kind: changed
+      description: The chart repository (https://github.com/coredns/helm) is the first entry in sources, so helm push sets it as the OCI chart's org.opencontainers.image.source annotation and Renovate finds the chart's release notes
 apiVersion: v2
 appVersion: 1.14.7
 description: CoreDNS is a DNS server that chains plugins and provides Kubernetes DNS
@@ -19,6 +19,7 @@ maintainers:
 - name: shubham-cmyk
 name: coredns
 sources:
+- https://github.com/coredns/helm
 - https://github.com/coredns/coredns
 type: application
-version: 1.50.2
+version: 1.50.8
